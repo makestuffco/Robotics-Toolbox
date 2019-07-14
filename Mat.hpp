@@ -120,6 +120,7 @@ constexpr double determinate(Matrix<M,M> mat, double mult = 1)
 }
 
 #ifdef _GLIBCXX_IOSTREAM
+#include <iomanip>
 template<uint32_t N,uint32_t M>
 std::ostream& operator<<(std::ostream& out, Matrix<N,M> const& mat) noexcept
 {
@@ -127,7 +128,7 @@ std::ostream& operator<<(std::ostream& out, Matrix<N,M> const& mat) noexcept
     {
         std::cout << "[";
         for(int j = 0; j < M; j++)
-            std::cout << '\t' << mat[j][i];
+            std::cout << std::setfill(' ') << std::setw(20) << mat[j][i];
         std::cout << "]\n";
     }
     return out;
@@ -139,7 +140,7 @@ template<uint32_t N,uint32_t M, typename T, typename = std::enable_if_t<std::is_
 constexpr auto operator*(T const& t, Matrix<N,M> const& mat) { return mat * t; }
 
 template<int dim>
-constexpr auto identity = []{
+auto identity = []{
     Matrix<dim,dim> out;
     for(int j = 0; j < dim; j++)
         out[j][j] = 1;
