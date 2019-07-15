@@ -79,6 +79,9 @@ public:
     template<typename T, typename = std::enable_if_t<std::is_arithmetic<T>::value>>
     constexpr Matrix& operator*=(T const& t) noexcept { return *this = *this * t; }
 
+    template<uint32_t M, uint32_t N, typename = std::enable_if_t<M != I>>   // If you're seeing this in an error message
+    constexpr Matrix operator*(Matrix<M,N> const&) noexcept = delete;       // your matrix dimentions don't match properly
+
     constexpr auto transpose() const noexcept
     {
         Matrix<I,J> out;
@@ -128,7 +131,7 @@ std::ostream& operator<<(std::ostream& out, Matrix<N,M> const& mat) noexcept
     {
         std::cout << "[";
         for(int j = 0; j < M; j++)
-            std::cout << std::setfill(' ') << std::setw(20) << mat[j][i];
+            std::cout << std::setfill(' ') << std::setw(10) << mat[j][i];
         std::cout << "]\n";
     }
     return out;
