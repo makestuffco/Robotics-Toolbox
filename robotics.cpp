@@ -41,7 +41,5 @@ Matrix<4,4> D_H_Table::getH_Matrix(uint32_t frame, uint32_t ref_frame) noexcept
                  offsets[alpha][frame] + (drivers[alpha][frame]?*drivers[alpha][frame]:0) * factors[alpha][frame])
                     * getH_Matrix(frame - 1, ref_frame);
     else
-        return identity<4>; // Unimplimented, requires inverse matrices, which aren't implimented, at the time of writing this
-    
-    
+        return inverse(getH_Matrix(ref_frame, frame));
 }

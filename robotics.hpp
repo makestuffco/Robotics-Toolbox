@@ -15,24 +15,24 @@ namespace rrt // Ryan's Robotics Toolbox
     {
         if constexpr(axis == Axis::_X_)
             return Matrix<4,4>({
-                { 1,             0         ,   0         ,     0 }, // Note: You are looking at the transpose of the matrix
-                { 0,             cos(theta),   sin(theta),     0 }, //       because the constructor takes a set of vectors
-                { 0,            -sin(theta),   cos(theta),     0 },
-                { 0,             0         ,   0         ,     1 }
+                { 1,           0,            0,     0 }, // Note: You are looking at the transpose of the matrix
+                { 0,  cos(theta),   sin(theta),     0 }, //       because the constructor takes a set of vectors
+                { 0, -sin(theta),   cos(theta),     0 },
+                { 0,           0,            0,     1 }
             });
         else if constexpr (axis == Axis::_Y_)
             return Matrix<4,4>({
-                { cos(theta),    0,            sin(theta),     0 },
-                { 0         ,    1,            0         ,     0 },
-                {-sin(theta),    0,            cos(theta),     0 },
-                { 0         ,    0,            0         ,     1 }
+                { cos(theta),    0, sin(theta),     0 },
+                {          0,    1,          0,     0 },
+                {-sin(theta),    0, cos(theta),     0 },
+                {          0,    0,          0,     1 }
             }).transpose();
         else if constexpr (axis == Axis::_Z_)
             return Matrix<4,4>({
-                { cos(theta),    sin(theta),   0,              0 },
-                {-sin(theta),    cos(theta),   0,              0 },
-                { 0         ,    0         ,   1,              0 },
-                { 0         ,    0         ,   0,              1 }
+                { cos(theta),    sin(theta),   0,   0 },
+                {-sin(theta),    cos(theta),   0,   0 },
+                {          0,             0,   1,   0 },
+                {          0,             0,   0,   1 }
             });
         else return identity<4>;
     }
@@ -42,24 +42,24 @@ namespace rrt // Ryan's Robotics Toolbox
     {
         if constexpr(axis == Axis::_X_)
             return Matrix<4,4>({
-                { 1   ,          0,            0,              0 }, // Note: You are looking at the transpose of the matrix
-                { 0   ,          1,            0,              0 }, //       because the constructor takes a set of vectors
-                { 0   ,          0,            1,              0 },
-                { dist,          0,            0,              1 }
+                {    1,    0,    0,    0 }, // Note: You are looking at the transpose of the matrix
+                {    0,    1,    0,    0 }, //       because the constructor takes a set of vectors
+                {    0,    0,    1,    0 },
+                { dist,    0,    0,    1 }
             });
         else if constexpr (axis == Axis::_Y_)
             return Matrix<4,4>({
-                { 1,             0   ,         0,              0 },
-                { 0,             1   ,         0,              0 },
-                { 0,             0   ,         1,              0 },
-                { 0,             dist,         0,              1 }
+                { 1,    0,    0,    0 },
+                { 0,    1,    0,    0 },
+                { 0,    0,    1,    0 },
+                { 0, dist,    0,    1 }
             });
         else if constexpr (axis == Axis::_Z_)
             return Matrix<4,4>({
-                { 1,             0   ,         0,              0 },
-                { 0,             1   ,         0,              0 },
-                { 0,             0   ,         1,              0 },
-                { 0,             dist,         0,              1 }
+                { 1,    0,    0,    0 },
+                { 0,    1,    0,    0 },
+                { 0,    0,    1,    0 },
+                { 0, dist,    0,    1 }
             });
             
         else return identity<4>;

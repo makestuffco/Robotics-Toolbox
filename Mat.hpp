@@ -94,6 +94,22 @@ public:
     }
 };
 
+#ifdef _GLIBCXX_IOSTREAM
+#include <iomanip>
+template<uint32_t N,uint32_t M>
+std::ostream& operator<<(std::ostream& out, Matrix<N,M> const& mat) noexcept
+{
+    for(int i = 0; i < N; i++)
+    {
+        std::cout << "[";
+        for(int j = 0; j < M; j++)
+            std::cout << std::setfill(' ') << std::setw(15) << mat[j][i];
+        std::cout << (i==N-1?"]":"]\n");
+    }
+    return out;
+}
+#endif // _GLIBCXX_IOSTREAM
+
 template<uint32_t M>
 constexpr double determinate(Matrix<M,M> mat, double mult = 1)
 {
@@ -106,15 +122,13 @@ constexpr double determinate(Matrix<M,M> mat, double mult = 1)
             Matrix<M-1,M-1> S;
             int idx = 0;
             for(auto vect : mat)
-            {
-                if(vect == v) continue;
-                S[idx++] = [=]{
-                    std::vector<double> tv;
-                    for(int i = 1; i < vect.size(); i++)
-                        tv.emplace_back(vect[i]);
-                    return tv;
-                }();
-            }
+                if(vect != v)
+                    S[idx++] = [=]{
+                        std::vector<double> tv;
+                        for(int i = 1; i < vect.size(); i++)
+                            tv.emplace_back(vect[i]);
+                        return tv;
+                    }();
             result += mult * determinate(S,v[0]);
             mult = -mult;
         }
@@ -122,21 +136,39 @@ constexpr double determinate(Matrix<M,M> mat, double mult = 1)
     }
 }
 
-#ifdef _GLIBCXX_IOSTREAM
-#include <iomanip>
-template<uint32_t N,uint32_t M>
-std::ostream& operator<<(std::ostream& out, Matrix<N,M> const& mat) noexcept
+template<uint32_t M>
+Matrix<M,M> inverse(Matrix<M,M> mat)
 {
-    for(int i = 0; i < N; i++)
+    Matrix<M,M> out;
+    for(int j = 0; j < M; j++)
     {
-        std::cout << "[";
-        for(int j = 0; j < M; j++)
-            std::cout << std::setfill(' ') << std::setw(10) << mat[j][i];
-        std::cout << "]\n";
+        for(int i = 0; i < M; i++)
+        {
+            Matrix<M-1,M-1> S;
+            int idx = 0;
+            double mult;
+            for(auto const& vect : mat)
+                if(vect != mat[i]) 
+                    S[idx++] = [=](){
+                        std::vector<double> tv;
+                        for(int ind = 0; ind < vect.size(); ind++)
+                            if(ind != j)
+                                tv.emplace_back(vect[ind]);
+                        return tv;
+                    }();
+                else mult = vect[j];
+            //std::cout << S << " * " << mult << " -> " << determinate(S) << "\n\n";
+            out[i][j] = determinate(S, ((i-j)%2?-1:1));
+        }
     }
-    return out;
+
+    double const det = determinate(mat);
+    for(auto& i : out)
+        for(auto& j : i)
+            j /= det;
+
+    return out.transpose();
 }
-#endif // _GLIBCXX_IOSTREAM
 
 
 template<uint32_t N,uint32_t M, typename T, typename = std::enable_if_t<std::is_arithmetic<T>::value>>
