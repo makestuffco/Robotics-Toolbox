@@ -72,7 +72,7 @@ namespace rrt // Ryan's Robotics Toolbox
 
     class D_H_Table
     {
-        std::vector<std::unique_ptr<double>> drivers[4];
+        std::vector<double*> drivers[4];
         std::vector<double> offsets[4]; 
         std::vector<double> factors[4]; 
 
